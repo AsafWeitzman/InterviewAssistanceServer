@@ -1,0 +1,50 @@
+module.exports = (sequelize, DataTypes) => {
+  const InterviewDetails = sequelize.define("InterviewDetails", {
+    companyLogo: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    companyName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    color: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    jobTitle: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    step: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    comment: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    whatWentWell: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    whatCanBeImproved: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    ActionItems: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    userEmail: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  });
+
+  return InterviewDetails;
+};
