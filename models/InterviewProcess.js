@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const InterviewDetails = sequelize.define("InterviewDetails", {
+  const InterviewProcess = sequelize.define("InterviewProcess", {
     companyLogo: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -46,5 +46,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  return InterviewDetails;
+  return InterviewProcess;
 };
