@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
+const cors = require("cors"); // connect the server to the client (white list)
 
-app.use(express.json());
+app.use(express.json()); // can response with json
+app.use(cors());
 
 const db = require("./models");
 
