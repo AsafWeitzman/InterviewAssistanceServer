@@ -49,6 +49,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  //test
+
   return InterviewProcess;
 };
