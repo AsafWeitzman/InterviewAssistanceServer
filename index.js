@@ -9,6 +9,7 @@ const db = require("./models");
 
 // Routers
 const interviewRouter = require("./routes/Interviews");
+app.use("/", interviewRouter);
 app.use("/interviews", interviewRouter);
 
 db.sequelize.sync().then(() => {
