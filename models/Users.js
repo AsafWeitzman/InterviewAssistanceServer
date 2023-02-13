@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define("User", {
+  const Users = sequelize.define("Users", {
     userName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -10,15 +10,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
-      set(value) {
-        this.setDataValue("password", hash(value));
-      },
       allowNull: false,
     },
   });
 
-  User.associate = (models) => {
-    User.hasMany(models.InterviewProcess);
+  Users.associate = (models) => {
+    Users.hasMany(models.InterviewProcess);
   };
-  return User;
+
+  return Users;
 };
