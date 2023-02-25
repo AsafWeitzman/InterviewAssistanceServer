@@ -19,6 +19,35 @@ router.post("/", async (req, res) => {
   res.json("USER SUCCESSFULLY SAVED!");
 });
 
+router.put("/editUserName/:id", validateToken, async (req, res) => {
+  const userId = req.params.id;
+
+  const newUserName = req.body;
+
+  await Users.update(newUserName, {
+    where: {
+      id: userId,
+    },
+  });
+
+  try {
+    const user = await Users.findOne({ where: { id: userId } });
+
+    const accessToken = sign(
+      { email: user.email, id: user.id, userName: user.userName },
+      "secretString" // TODO: make secret (ENV VAR)
+    );
+    return res.json({
+      token: accessToken,
+      userName: user.userName,
+      id: user.id,
+      email: user.email,
+    });
+  } catch (err) {
+    return res.json({ error: err });
+  }
+});
+
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
