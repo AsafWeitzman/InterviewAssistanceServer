@@ -2,9 +2,23 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
+const multer = require("multer");
 
 const { Users } = require("../models");
 const { validateToken } = require("../middlewares/AuthMiddleware");
+const PORT = 3001;
+
+// multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./");
+  },
+  filename: function (req, file, cb) {
+    const ext = file.mimetype.split("/")[1];
+    cb(null, `uploads/${file.originalname}-${Date.now()}.${ext}`);
+  },
+});
+const upload = multer({ storage: storage });
 
 router.post("/", async (req, res) => {
   const { userName, email, password } = req.body;
@@ -24,13 +38,13 @@ router.put("/editUserName/:id", validateToken, async (req, res) => {
 
   const newUserName = req.body;
 
-  await Users.update(newUserName, {
-    where: {
-      id: userId,
-    },
-  });
-
   try {
+    await Users.update(newUserName, {
+      where: {
+        id: userId,
+      },
+    });
+
     const user = await Users.findOne({ where: { id: userId } });
 
     const accessToken = sign(
@@ -69,17 +83,55 @@ router.post("/login", async (req, res) => {
       "secretString" // TODO: make secret (ENV VAR)
     );
 
+    const filename = user.profilePicture;
+    const profilePicture = `http://localhost:${PORT}/${filename}`;
+
     res.json({
       token: accessToken,
       userName: user.userName,
       id: user.id,
       email: user.email,
+      profilePicture: profilePicture,
     });
   });
 });
 
 router.get("/authUser", validateToken, async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const user = await Users.findOne({ where: { id: userId } });
+    const filename = user.profilePicture;
+
+    const profilePicture = `http://localhost:${PORT}/${filename}`;
+
+    return res.json({ ...req.user, profilePicture: profilePicture });
+  } catch (error) {
+    console.log("Oh no: ", error);
+  }
   res.json(req.user);
 });
+
+router.put(
+  "/editProfilePicture/:id",
+  upload.single("profilePicture"),
+  validateToken,
+  async (req, res) => {
+    const userId = req.params.id;
+    const filename = req.file.filename;
+
+    await Users.update(
+      { profilePicture: filename },
+      {
+        where: {
+          id: userId,
+        },
+      }
+    );
+
+    console.log("Profile image inserted into database successfully!");
+    const profilePicture = `http://localhost:${PORT}/${filename}`;
+    res.json({ profilePicture: profilePicture });
+  }
+);
 
 module.exports = router;
