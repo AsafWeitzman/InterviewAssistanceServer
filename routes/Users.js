@@ -146,7 +146,7 @@ router.put(
   validateToken,
   async (req, res) => {
     const userId = req.params.id;
-    const filename = req.file.filename;
+    const filename = req.file?.filename;
 
     await Users.update(
       { profilePicture: filename },
