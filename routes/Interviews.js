@@ -48,13 +48,16 @@ router.put("/edit/:id", validateToken, async (req, res) => {
 
   const newInterview = req.body;
 
-  await InterviewProcess.update(newInterview, {
-    where: {
-      id: interviewId,
-    },
-  });
-
-  res.json("UPDATE SUCCESFULLY");
+  try {
+    await InterviewProcess.update(newInterview, {
+      where: {
+        id: interviewId,
+      },
+    });
+    res.json("UPDATE SUCCESFULLY");
+  } catch (error) {
+    res.json(error);
+  }
 });
 
 module.exports = router;
